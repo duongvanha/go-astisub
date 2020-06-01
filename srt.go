@@ -2,6 +2,7 @@ package astisub
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -47,6 +48,9 @@ func ReadFromSRT(i io.Reader) (o *Subtitles, err error) {
 		// Line contains time boundaries
 		if strings.Contains(line, srtTimeBoundariesSeparator) {
 			// Remove last item of previous subtitle since it's the index
+			if len(s.Lines)-1 < 1 {
+				return nil, errors.New(fmt.Sprintf("index wrong %d", lineNum))
+			}
 			index := s.Lines[len(s.Lines)-1]
 			s.Lines = s.Lines[:len(s.Lines)-1]
 
